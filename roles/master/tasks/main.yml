@@ -31,7 +31,7 @@
 - name: "Create a symbolic link"
   file:
       src: "/mnt/glusterfs/snmp"
-      dest: "/var/lib/snmp"
+      dest: "/var/lib/"
       owner: "nrd"
       group: "nrd"
       state: link
