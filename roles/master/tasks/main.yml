@@ -30,11 +30,15 @@
 
 - name: "Create a symbolic link"
   file:
-      src: "/mnt/glusterfs/snmp"
-      dest: "/var/lib/snmp"
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
       owner: "nrd"
       group: "nrd"
       state: link
+  with_items:
+    - { src: "/mnt/glusterfs/snmp", dest: "/var/lib/snmp" }
+    - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/kpikci" }
+    - { src: "/mnt/glusterfs/cli", dest: "/var/lib/cli" }
   become: yes
   become_user: root
   become_method: sudo
