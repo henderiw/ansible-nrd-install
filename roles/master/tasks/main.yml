@@ -1,4 +1,9 @@
 ---
+- name: Ensure group "nrd" exists
+  group:
+    name: nrd
+    state: present
+
 - name: Add the user 'nrd'
   user:
     name: nrd
