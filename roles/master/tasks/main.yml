@@ -48,15 +48,15 @@
   #   - /mnt/glusterfs/kpikci
   #   - /mnt/glusterfs/cli
 
-- name: "Create glusterfs mnt directories"
-  file:
-      path: "{{ item }}"
-      owner: "nrd"
-      group: "nrd"
-      state: directory
-      mode: 0755
-  with_items:
-    - /var/lib/cli
-  become: yes
-  become_user: root
-  become_method: sudo
+# - name: "Create glusterfs mnt directories"
+#   file:
+#       path: "{{ item }}"
+#       owner: "nrd"
+#       group: "nrd"
+#       state: directory
+#       mode: 0755
+#   with_items:
+#     - /var/lib/cli
+#   become: yes
+#   become_user: root
+#   become_method: sudo
