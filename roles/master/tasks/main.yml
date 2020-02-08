@@ -28,20 +28,21 @@
   become_user: root
   become_method: sudo
 
-# - name: "Create a symbolic link"
-#   file:
-#       src: "{{ item }}"
-#       dst: "/var/lib/"
-#       owner: "nrd"
-#       group: "nrd"
-#       state: link
-#   with_items:
-#     - /mnt/glusterfs/snmp
-#     - /mnt/glusterfs/kpikci
-#     - /mnt/glusterfs/cli
-#   become: yes
-#   become_user: root
-#   become_method: sudo
+- name: "Create a symbolic link"
+  file:
+      src: "/mnt/glusterfs/snmp"
+      dest: "/var/lib/"
+      owner: "nrd"
+      group: "nrd"
+      state: link
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  # with_items:
+  #   - /mnt/glusterfs/snmp
+  #   - /mnt/glusterfs/kpikci
+  #   - /mnt/glusterfs/cli
 
 - name: "Create glusterfs mnt directories"
   file:
