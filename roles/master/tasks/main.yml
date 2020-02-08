@@ -28,10 +28,10 @@
   become_user: root
   become_method: sudo
 
-- name: "Create a symbolic link"
+- name: "/var/lib/" 
   file:
       src: "/mnt/glusterfs/snmp"
-      dest: "/var/lib/"
+      dest: "Create a symbolic link"
       owner: "nrd"
       group: "nrd"
       state: link
