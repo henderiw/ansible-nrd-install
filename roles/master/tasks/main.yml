@@ -1,4 +1,9 @@
 ---
+- name: Add the user 'nrd'
+  user:
+    name: nrd
+    group: nrd
+
 - name: "Create glusterfs /mnt directories"
   file:
       path: "{{ item }}"
