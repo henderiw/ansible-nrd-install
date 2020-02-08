@@ -1,0 +1,6 @@
+master_ip: 10.10.20.20
+
+docker_dir: docker_images
+helm_dir: charts
+script_dir: scripts
+rbac_dir: scripts/rbac/access-group
