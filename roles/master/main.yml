@@ -1,0 +1,47 @@
+---
+- name: Create glusterfs /mnt directories
+  file:
+      path: {{ item }}
+      owner: nrd
+      group: nrd
+      state: directory
+      mode: 0755
+  with_items:
+    - /mnt/glusterfs/snmp
+    - /mnt/glusterfs/kpikci
+    - /mnt/glusterfs/cli
+    - /mnt/glusterfs/cli/system
+    - /mnt/glusterfs/cli/user
+    - /mnt/glusterfs/system
+    - /mnt/glusterfs/system/user
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: Create a symbolic link
+  file:
+      src: {{ item }}
+      dst: /var/lib/
+      owner: nrd
+      group: nrd
+      state: link
+  with_items:
+    - /mnt/glusterfs/snmp
+    - /mnt/glusterfs/kpikci
+    - /mnt/glusterfs/cli
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: Create glusterfs mnt directories
+  file:
+      path: {{ item }}
+      owner: nrd
+      group: nrd
+      state: directory
+      mode: 0755
+  with_items:
+    - /var/lib/cli
+  become: yes
+  become_user: root
+  become_method: sudo
