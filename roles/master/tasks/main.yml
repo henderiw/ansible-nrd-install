@@ -83,7 +83,7 @@
 - name: copy cli yaml file to /usr/local/bin/cli
   copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ item }}"
-    dest: " /usr/local/bin/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
     mode: 0755
   with_items:
     - cli
