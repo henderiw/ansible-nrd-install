@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: False
   vars:
-    random_number: "{{ 100 | random }}"
+    random_number: "{{ 111111 | random }}"
   tasks:
     - name: Print the random number
       debug: var=random_number
