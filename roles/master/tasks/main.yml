@@ -125,6 +125,14 @@
     - mysqld-exporter.tar.gz
 
 - name: copy script admin_tech_support.py file
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - admin_tech_support.py
+
+- name: copy script admin_tech_support.py file
   file:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/admin_tech_support.py"
     dest: "/tmp/admin_tech_support.py"
