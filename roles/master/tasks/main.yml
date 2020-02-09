@@ -78,6 +78,11 @@
 #   become_user: root
 #   become_method: sudo
 
+- name: Touch a file
+  file:
+    path: /tmp/nrd_{{ random_number }}/nrf.json
+    state: touch
+    mode: 0644
 
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
