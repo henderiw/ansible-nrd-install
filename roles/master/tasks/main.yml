@@ -110,7 +110,7 @@
     dest: "/tmp/"
     mode: 0644
 
-- name: todo helm chart upload
+# - name: todo helm chart upload
 
 - name: copy script admin_tech_support.py file
   file:
