@@ -1,13 +1,4 @@
 ---
-- name: Test random filter
-  hosts: localhost
-  gather_facts: False
-  vars:
-    random_number: "{{ 111111 | random }}"
-  tasks:
-    - name: Print the random number
-      debug: var=random_number
-
 - hosts: node
   gather_facts: yes
   become: yes
