@@ -70,7 +70,7 @@
 
 - name: Load image from archive and push to a private registry
   docker_image:
-    name: "{{ item.name }}"
+    name: "localhost:5000/{{ item.name }}"
     push: yes
     load_path: "/tmp/{{ item.filename }}"
     source: load
