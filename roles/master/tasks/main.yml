@@ -117,7 +117,6 @@
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/tmp/"
     mode: 0755
-    state: hard
     remote_src: no
   with_items:
     - admin_tech_support.py
