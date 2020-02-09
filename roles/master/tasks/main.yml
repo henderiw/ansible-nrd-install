@@ -127,32 +127,24 @@
 - name: copy script admin_tech_support.py file
   copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
-    dest: "/tmp/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
     mode: 0755
   with_items:
     - admin_tech_support.py
 
-- name: copy script admin_tech_support.py file
-  file:
-    src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/admin_tech_support.py"
-    dest: "/tmp/admin_tech_support.py"
-    mode: 0755
-
 - name: copy script rpc.py file to /usr/bin/hostRpc
-  file:
+  copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/bin/hostRpc"
     mode: 0755
-    remote_src: yes
   with_items:
     - "rpc.py"
 
 - name: copy nrdcli.service to /tmp
-  file:
+  copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
-    dest: "/tmp"
+    dest: "/usr/lib/systemd/system/{{ item }}"
     mode: 0644
-    remote_src: yes
   with_items:
     - nrdcli.service
 
@@ -172,10 +164,9 @@
     name: nrdcli
 
 - name: copy script find_service_worker file to /usr/local/bin
-  file:
+  copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
-    dest: "/tmp"
+    dest: "/usr/local/bin/{{ item }}"
     mode: 0755
-    remote_src: yes
   with_items:
     - find_service_worker
