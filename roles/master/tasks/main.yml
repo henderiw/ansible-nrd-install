@@ -79,18 +79,17 @@
 #   become_user: root
 #   become_method: sudo
 
-- name: load docker images
-  command: docker load -i /tmp/{{ item }}
-  with_items:
-    - nrd.tar.gz
-    - nrddb.tar.gz
-    - collectd.tar.gz
-    - mariadb.tar.gz
-    - mysqld-exporter.tar.gz
-  become: yes
-  become_user: root
-  become_method: sudo
-
+# - name: load docker images
+#   command: docker load -i /tmp/{{ item }}
+#   with_items:
+#     - nrd.tar.gz
+#     - nrddb.tar.gz
+#     - collectd.tar.gz
+#     - mariadb.tar.gz
+#     - mysqld-exporter.tar.gz
+#   become: yes
+#   become_user: root
+#   become_method: sudo
 
 # - name: Load image from archive and push to a private registry
 #   docker_image:
@@ -104,3 +103,9 @@
 #     - { name: "collectd", filename: "collectd.tar.gz" }
 #     - { name: "mariadb", filename: "mariadb.tar.gz" }
 #     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
+
+- name: copy helm charts to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ helm_dir }}"
+    dest: "/tmp/"
+    mode: 0644
