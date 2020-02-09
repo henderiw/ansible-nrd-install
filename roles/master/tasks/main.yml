@@ -185,6 +185,9 @@
 
 - name: create kubernetes namespace in k8s
   command: kubectl create namespace nrd-database
+  become: yes
+  become_user: root
+  become_method: sudo
 
 - name: create pv/pvc objects in k8s
   command: kubectl create -f /tmp/{{ item }}
