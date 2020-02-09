@@ -183,16 +183,19 @@
 #     - nrddb-pv.yaml
 #     - nrddb-pvc.yaml
 
-# - name: create kubernetes namespace in k8s
-#   command: kubectl create namespace nrd-database
-#   become: yes
-#   become_user: henderiw
+- name: create kubernetes namespace in k8s
+  command: kubectl create namespace nrd-database
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
 
 - name: create pv/pvc objects in k8s
   command: kubectl create -f /tmp/{{ item }}
+  ignore_errors: True
   with_items:
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
   become: yes
   become_user: henderiw
+
 
