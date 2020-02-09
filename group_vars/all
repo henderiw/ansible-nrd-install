@@ -1,5 +1,6 @@
 master_ip: 10.10.20.20
 
+nrd_dir: nrd_11_0_R5
 docker_dir: docker_images
 helm_dir: charts
 script_dir: scripts
