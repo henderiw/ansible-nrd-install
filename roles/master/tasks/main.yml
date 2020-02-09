@@ -105,6 +105,18 @@
 - name: remove dummy docker container
   command: docker rm -fv dummy
 
+- name: Touch a file /etc/sysconfig/nrfKubernetes.json
+  file:
+    path: /etc/sysconfig/nrfKubernetes.json
+    state: touch
+    mode: 0777
+
+- name: Touch a file /etc/sysconfig/nrfKubernetes.json
+  file:
+    path: /etc/sysconfig/nrfKubernetes.json
+    state: touch
+    mode: 0777
+
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
   ignore_errors: True
