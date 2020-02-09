@@ -198,4 +198,26 @@
   become: yes
   become_user: henderiw
 
+- name: copy rbac yaml file to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ rbac_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - clusteredit.yaml
+    - clusterview.yaml
+    - nrdedit.yaml
+    - nrdview.yam
+    - superadmin.yaml
 
+- name: create rbac objects in k8s
+  command: kubectl create -f /tmp/{{ item }}
+  ignore_errors: True
+  with_items:
+    - clusteredit.yaml
+    - clusterview.yaml
+    - nrdedit.yaml
+    - nrdview.yam
+    - superadmin.yaml
+  become: yes
+  become_user: henderiw
