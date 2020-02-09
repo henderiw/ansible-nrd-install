@@ -70,7 +70,7 @@
 
 - name: Load image from archive and push to a private registry
   docker_image:
-    name: localhost:5000/nrd
+    name: nrd
     #tag: v1
     push: yes
     load_path: /tmp/nrd.tar.gz
