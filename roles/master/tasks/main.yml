@@ -112,6 +112,18 @@
 
 # - name: todo helm chart upload
 
+- name: copy docker files to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0644
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
+
 - name: copy script admin_tech_support.py file
   file:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
