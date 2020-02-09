@@ -71,7 +71,7 @@
 - name: Load image from archive and push to a private registry
   docker_image:
     name: nrd
-    #tag: v1
+    tag: NRD_11_0_R5
     push: yes
     load_path: /tmp/nrd.tar.gz
     source: load
