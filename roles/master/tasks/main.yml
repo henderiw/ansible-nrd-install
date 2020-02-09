@@ -111,9 +111,9 @@
     state: touch
     mode: 0777
 
-- name: Touch a file /etc/sysconfig/nrfKubernetes.json
+- name: Touch a file /etc/sysconfig/nrfKubernetes_version.json
   file:
-    path: /etc/sysconfig/nrfKubernetes.json
+    path: /etc/sysconfig/nrfKubernetes_version.json
     state: touch
     mode: 0777
 
