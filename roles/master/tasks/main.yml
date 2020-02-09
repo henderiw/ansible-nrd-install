@@ -86,7 +86,7 @@
     - nrddb.tar.gz
     - collectd.tar.gz
     - mariadb.tar.gz
-    - mysqld-exporter.tar.gz"
+    - mysqld-exporter.tar.gz
   become: yes
   become_user: root
   become_method: sudo
