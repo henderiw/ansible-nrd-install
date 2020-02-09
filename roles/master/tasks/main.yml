@@ -72,3 +72,15 @@
     - collectd.tar.gz
     - mariadb.tar.gz
     - mysqld-exporter.tar.gz
+
+- name: Load image from archive and push to a private registry
+  docker_image:
+    push: yes
+    load_path: "/tmp/{{ item }}"
+    source: load
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
