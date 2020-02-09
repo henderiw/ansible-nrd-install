@@ -168,17 +168,27 @@
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
 
-- name: Create a nrd-database namespace
-  k8s:
-    name: nrd-database
-    api_version: v1
-    kind: Namespace
-    state: present
+# - name: Create a nrd-database namespace
+#   k8s:
+#     name: nrd-database
+#     api_version: v1
+#     kind: Namespace
+#     state: present
 
-- name: Create k8s pv/pvc definition from a file
-  k8s:
-    state: present
-    src: /tmp/{{ item }}
+# - name: Create k8s pv/pvc definition from a file
+#   k8s:
+#     state: present
+#     src: /tmp/{{ item }}
+#   with_items:
+#     - nrddb-pv.yaml
+#     - nrddb-pvc.yaml
+
+- name: create kubernetes namespace in k8s
+  command: kubectl create namespace nrd-database
+
+- name: create pv/pvc objects in k8s
+  command: kubectl create -f /tmp/{{ item }}
   with_items:
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
+
