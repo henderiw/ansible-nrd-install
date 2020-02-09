@@ -118,7 +118,7 @@
     dest: "/tmp/{{ item }}"
     mode: 0755
   with_items:
-    - "admin_tech_support.py"
+    - 'admin_tech_support.py'
 
 - name: copy script rpc.py file to /usr/bin/hostRpc
   file:
