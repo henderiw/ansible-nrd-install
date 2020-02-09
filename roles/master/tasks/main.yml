@@ -123,26 +123,26 @@
   become: yes
   become_user: henderiw
 
-- name: create nrd-database namespace in k8s
+- name: update nrd namespace with istio in k8s
   command: kubectl label namespace nrd istio-injection=enabled
   ignore_errors: True
   become: yes
   become_user: henderiw
 
 - name: create configmap
-  command: kubectl create configmap nrf "{{ result.path }}/nrf.json" -n nrd
+  command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
   ignore_errors: True
   become: yes
   become_user: henderiw
 
 - name: create configmap
-  command: kubectl create configmap nrdplatformcfg /etc/sysconfig/nrfKubernetes.json -n default
+  command: kubectl create configmap nrdplatformcfg --from-file=/etc/sysconfig/nrfKubernetes.json -n default
   ignore_errors: True
   become: yes
   become_user: henderiw
 
 - name: create configmap
-  command: kubectl create configmap imageversion /etc/sysconfig/nrfKubernetes_version.json -n default
+  command: kubectl create configmap imageversion --from-file=/etc/sysconfig/nrfKubernetes_version.json -n default
   ignore_errors: True
   become: yes
   become_user: henderiw
