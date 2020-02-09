@@ -80,7 +80,7 @@
 
 - name: Touch a file
   file:
-    path: /tmp/nrd_{{ var=random_number }}/nrf.json
+    path: /tmp/nrd_{{ random_number }}/nrf.json
     state: touch
     mode: 0644
 
