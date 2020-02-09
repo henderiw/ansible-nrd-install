@@ -68,16 +68,16 @@
 #     - mariadb.tar.gz
 #     - mysqld-exporter.tar.gz
 
-- name: Load image from archive and push to a private registry
-  docker_image:
-    name: nrd
-    tag: NRD_11_0_R5
-    push: yes
-    load_path: /tmp/nrd.tar.gz
-    source: load
-  become: yes
-  become_user: root
-  become_method: sudo
+# - name: Load image from archive and push to a private registry
+#   docker_image:
+#     name: nrd
+#     tag: NRD_11_0_R5
+#     push: yes
+#     load_path: /tmp/nrd.tar.gz
+#     source: load
+#   become: yes
+#   become_user: root
+#   become_method: sudo
 
 - name: load docker images
   command: docker load -i /tmp/{{ item }}
