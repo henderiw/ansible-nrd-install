@@ -43,11 +43,6 @@
   become_user: root
   become_method: sudo
 
-  # with_items:
-  #   - /mnt/glusterfs/snmp
-  #   - /mnt/glusterfs/kpikci
-  #   - /mnt/glusterfs/cli
-
 # - name: "Create glusterfs mnt directories"
 #   file:
 #       path: "{{ item }}"
@@ -75,12 +70,13 @@
 
 - name: Load image from archive and push to a private registry
   docker_image:
+    name: "{{ item.name }}"
     push: yes
-    load_path: "/tmp/{{ item }}"
+    load_path: "/tmp/{{ item.filename }}"
     source: load
   with_items:
-    - nrd.tar.gz
-    - nrddb.tar.gz
-    - collectd.tar.gz
-    - mariadb.tar.gz
-    - mysqld-exporter.tar.gz
+    - { name: "nrd", filename: "nrd.tar.gz" }
+    - { name: "nrddb", filename: "nrddb.tar.gz" }
+    - { name: "collectd", filename: "collectd.tar.gz" }
+    - { name: "mariadb", filename: "mariadb.tar.gz" }
+    - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
