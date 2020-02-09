@@ -70,6 +70,13 @@
 
 - name: Load image from archive and push to a private registry
   docker_image:
+    name: localhost:5000/myimages/nrd
+    tag: v1
+    push: yes
+    load_path: /tmp/nrd.tar.gz
+
+- name: Load image from archive and push to a private registry
+  docker_image:
     name: "localhost:5000/{{ item.name }}"
     push: yes
     load_path: "/tmp/{{ item.filename }}"
