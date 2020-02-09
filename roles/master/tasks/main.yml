@@ -207,7 +207,7 @@
     - clusteredit.yaml
     - clusterview.yaml
     - nrdedit.yaml
-    - nrdview.yam
+    - nrdview.yaml
     - superadmin.yaml
 
 - name: create rbac objects in k8s
