@@ -87,12 +87,12 @@
 
 - name: debug directory output
   debug:
-    var: result
-    verbosity: 2
+    var: result.path
+    verbosity: 5
 
 - name: Touch a file
   file:
-    path: /tmp/nrd_{{ random_number }}/nrf.json
+    path: "{{ result.path }}/nrf.json"
     state: touch
     mode: 0644
 
