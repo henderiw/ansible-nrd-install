@@ -78,6 +78,12 @@
 #   become_user: root
 #   become_method: sudo
 
+- name: Create a random nrf directory 
+  file:
+    path: /tmp/nrd_{{ random_number }}
+    state: directory
+    mode: 0644
+
 - name: Touch a file
   file:
     path: /tmp/nrd_{{ random_number }}/nrf.json
