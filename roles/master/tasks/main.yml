@@ -1,82 +1,92 @@
 ---
-# - name: Ensure group "nrd" exists
-#   group:
-#     name: nrd
-#     state: present
+- name: Ensure group "nrd" exists
+  group:
+    name: nrd
+    state: present
 
-# - name: Add the user 'nrd'
-#   user:
-#     name: nrd
-#     group: nrd
+- name: Add the user 'nrd'
+  user:
+    name: nrd
+    group: nrd
 
-# - name: Create glusterfs /mnt directories
-#   file:
-#       path: "{{ item }}"
-#       owner: "nrd"
-#       group: "nrd"
-#       state: directory
-#       mode: 0755
-#   with_items:
-#     - /mnt/glusterfs/snmp
-#     - /mnt/glusterfs/kpikci
-#     - /mnt/glusterfs/cli
-#     - /mnt/glusterfs/cli/system
-#     - /mnt/glusterfs/cli/user
-#     - /mnt/glusterfs/system
-#     - /mnt/glusterfs/system/user
-#   become: yes
-#   become_user: root
-#   become_method: sudo
+- name: Create glusterfs /mnt directories
+  file:
+      path: "{{ item }}"
+      owner: "nrd"
+      group: "nrd"
+      state: directory
+      mode: 0755
+  with_items:
+    - /mnt/glusterfs/snmp
+    - /mnt/glusterfs/kpikci
+    - /mnt/glusterfs/cli
+    - /mnt/glusterfs/cli/system
+    - /mnt/glusterfs/cli/user
+    - /mnt/glusterfs/system
+    - /mnt/glusterfs/system/user
 
-# - name: Create a symbolic link
-#   file:
-#       src: "{{ item.src }}"
-#       dest: "{{ item.dest }}"
-#       owner: "nrd"
-#       group: "nrd"
-#       state: link
-#   with_items:
-#     - { src: "/mnt/glusterfs/snmp", dest: "/var/lib/snmp" }
-#     - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/kpikci" }
-#     - { src: "/mnt/glusterfs/cli", dest: "/var/lib/cli" }
-#   become: yes
-#   become_user: root
-#   become_method: sudo
+- name: Create a symbolic link
+  file:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: "nrd"
+      group: "nrd"
+      state: link
+  with_items:
+    - { src: "/mnt/glusterfs/snmp", dest: "/var/lib/snmp" }
+    - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/kpikci" }
+    - { src: "/mnt/glusterfs/cli", dest: "/var/lib/cli" }
 
-# - name: copy docker files to /tmp
-#   copy:
-#     src: "/home/henderiw/{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
-#     dest: "/tmp/{{ item }}"
-#     mode: 0644
-#   with_items:
-#     - nrd.tar.gz
-#     - nrddb.tar.gz
-#     - collectd.tar.gz
-#     - mariadb.tar.gz
-#     - mysqld-exporter.tar.gz
+- name: copy docker files to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0644
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
 
+- name: load docker images
+  command: docker load -i /tmp/{{ item }}
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
+
+# ERROR to be sorted
 # - name: Load image from archive and push to a private registry
 #   docker_image:
-#     name: nrd
-#     tag: NRD_11_0_R5
+#     name: "localhost:5000/{{ item.name }}"
 #     push: yes
-#     load_path: /tmp/nrd.tar.gz
+#     load_path: "/tmp/{{ item.filename }}"
 #     source: load
-#   become: yes
-#   become_user: root
-#   become_method: sudo
-
-# - name: load docker images
-#   command: docker load -i /tmp/{{ item }}
 #   with_items:
-#     - nrd.tar.gz
-#     - nrddb.tar.gz
-#     - collectd.tar.gz
-#     - mariadb.tar.gz
-#     - mysqld-exporter.tar.gz
-#   become: yes
-#   become_user: root
-#   become_method: sudo
+#     - { name: "nrd", filename: "nrd.tar.gz" }
+#     - { name: "nrddb", filename: "nrddb.tar.gz" }
+#     - { name: "collectd", filename: "collectd.tar.gz" }
+#     - { name: "mariadb", filename: "mariadb.tar.gz" }
+#     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
+
+- name: copy cli yaml file to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - cli
+
+- name: copy cli yaml file to /usr/local/bin/cli
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ item }}"
+    dest: " /usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - cli
 
 - name: Create a random nrf directory 
   file:
@@ -165,24 +175,11 @@
   become: yes
   become_user: henderiw
 
-# - name: Load image from archive and push to a private registry
-#   docker_image:
-#     name: "localhost:5000/{{ item.name }}"
-#     push: yes
-#     load_path: "/tmp/{{ item.filename }}"
-#     source: load
-#   with_items:
-#     - { name: "nrd", filename: "nrd.tar.gz" }
-#     - { name: "nrddb", filename: "nrddb.tar.gz" }
-#     - { name: "collectd", filename: "collectd.tar.gz" }
-#     - { name: "mariadb", filename: "mariadb.tar.gz" }
-#     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
-
-# - name: copy helm charts to /tmp
-#   copy:
-#     src: "/home/henderiw/{{ nrd_dir }}/{{ helm_dir }}"
-#     dest: "/tmp/"
-#     mode: 0644
+- name: copy helm charts to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ helm_dir }}"
+    dest: "/tmp/"
+    mode: 0644
 
 # - name: todo helm chart upload
 
@@ -242,6 +239,7 @@
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
 
+# ERROR WITH K8S commands to be sorted
 # - name: Create a nrd-database namespace
 #   k8s:
 #     name: nrd-database
