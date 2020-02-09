@@ -43,19 +43,6 @@
 #   become_user: root
 #   become_method: sudo
 
-# # - name: "Create glusterfs mnt directories"
-# #   file:
-# #       path: "{{ item }}"
-# #       owner: "nrd"
-# #       group: "nrd"
-# #       state: directory
-# #       mode: 0755
-# #   with_items:
-# #     - /var/lib/cli
-# #   become: yes
-# #   become_user: root
-# #   become_method: sudo
-
 # - name: copy docker files to /tmp
 #   copy:
 #     src: "/home/henderiw/{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
@@ -90,6 +77,25 @@
 #   become: yes
 #   become_user: root
 #   become_method: sudo
+
+
+- name: create nrd namespace in k8s
+  command: kubectl create namespace nrd
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create nrd-management namespace in k8s
+  command: kubectl create namespace nrd-management
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create nrd-database namespace in k8s
+  command: kubectl create namespace nrd-database
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
 
 # - name: Load image from archive and push to a private registry
 #   docker_image:
@@ -217,7 +223,7 @@
     - clusteredit.yaml
     - clusterview.yaml
     - nrdedit.yaml
-    - nrdview.yam
+    - nrdview.yaml
     - superadmin.yaml
   become: yes
   become_user: henderiw
