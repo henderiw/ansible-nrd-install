@@ -123,6 +123,36 @@
   become: yes
   become_user: henderiw
 
+- name: create nrd-database namespace in k8s
+  command: kubectl label namespace nrd istio-injection=enabled
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create configmap
+  command: kubectl create configmap nrf "{{ result.path }}/nrf.json" -n nrd
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create configmap
+  command: kubectl create configmap nrdplatformcfg /etc/sysconfig/nrfKubernetes.json -n default
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create configmap
+  command: kubectl create configmap imageversion /etc/sysconfig/nrfKubernetes_version.json -n default
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
+- name: create configmap
+  command: kubectl create configmap kpikci --from-literal=ci=15 --from-literal=ri=15 --from-literal=retention=7
+  ignore_errors: True
+  become: yes
+  become_user: henderiw
+
 # - name: Load image from archive and push to a private registry
 #   docker_image:
 #     name: "localhost:5000/{{ item.name }}"
