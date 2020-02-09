@@ -6,3 +6,5 @@ helm_dir: charts
 script_dir: scripts
 db_dir: db
 rbac_dir: scripts/rbac/access-group
+
+random_number: "{{ 111111 | random }}"
