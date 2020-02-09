@@ -82,7 +82,7 @@
   file:
     path: /tmp/nrd_{{ random_number }}
     state: directory
-    mode: 0644
+    mode: 0777
   register: result
 
 - name: debug directory output
@@ -94,7 +94,16 @@
   file:
     path: "{{ result.path }}/nrf.json"
     state: touch
-    mode: 0644
+    mode: 0777
+
+- name: create dummy docker container
+  command: docker create -ti --name dummy nrd:NRD_11_0_R5 bash
+
+- name: copy nrf.json in tempfile
+  command: docker cp dummy:/etc/sysconfig/nrf.json "{{ result.path }}/nrf.json"
+
+- name: remove dummy docker container
+  command: docker rm -fv dummy
 
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
