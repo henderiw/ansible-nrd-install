@@ -83,6 +83,11 @@
     path: /tmp/nrd_{{ random_number }}
     state: directory
     mode: 0644
+  register: dir_result
+
+- debug:
+    var: dir_result
+    verbosity: 2
 
 - name: Touch a file
   file:
