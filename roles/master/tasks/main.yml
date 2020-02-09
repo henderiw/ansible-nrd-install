@@ -112,18 +112,6 @@
 
 # - name: todo helm chart upload
 
-- name: copy docker files to /tmp
-  copy:
-    src: "/home/henderiw/{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
-    dest: "/tmp/{{ item }}"
-    mode: 0644
-  with_items:
-    - nrd.tar.gz
-    - nrddb.tar.gz
-    - collectd.tar.gz
-    - mariadb.tar.gz
-    - mysqld-exporter.tar.gz
-
 - name: copy script admin_tech_support.py file
   copy:
     src: "/home/henderiw/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
@@ -170,3 +158,27 @@
     mode: 0755
   with_items:
     - find_service_worker
+
+- name: copy pv/pvc yaml file to /tmp
+  copy:
+    src: "/home/henderiw/{{ nrd_dir }}/{{ db_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - nrddb-pv.yaml
+    - nrddb-pvc.yaml
+
+- name: Create a nrd-database namespace
+  k8s:
+    name: nrd-database
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Create k8s pv/pvc definition from a file
+  k8s:
+    state: present
+    src: /tmp/{{ item }}
+  with_items:
+    - nrddb-pv.yaml
+    - nrddb-pvc.yaml

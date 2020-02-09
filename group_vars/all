@@ -4,4 +4,5 @@ nrd_dir: nrd_11_0_R5
 docker_dir: docker_images
 helm_dir: charts
 script_dir: scripts
+db_dir: db
 rbac_dir: scripts/rbac/access-group
