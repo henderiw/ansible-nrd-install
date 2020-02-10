@@ -1,0 +1,156 @@
+---
+- name: copy docker files to /tmp
+  copy:
+    src: "{{ local_dir }}{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0644
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
+
+# ERROR to be sorted
+# - name: Load image from archive and push to a private registry
+#   docker_image:
+#     name: "localhost:5000/{{ item.name }}"
+#     push: yes
+#     load_path: "/tmp/{{ item.filename }}"
+#     source: load
+#   with_items:
+#     - { name: "nrd", filename: "nrd.tar.gz" }
+#     - { name: "nrddb", filename: "nrddb.tar.gz" }
+#     - { name: "collectd", filename: "collectd.tar.gz" }
+#     - { name: "mariadb", filename: "mariadb.tar.gz" }
+#     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
+
+- name: load docker images
+  command: docker load -i /tmp/{{ item }}
+  with_items:
+    - nrd.tar.gz
+    - nrddb.tar.gz
+    - collectd.tar.gz
+    - mariadb.tar.gz
+    - mysqld-exporter.tar.gz
+
+- name: tag docker images
+  command: docker image tag {{ item }} tfMaster0:5000/{{ item }}
+  with_items:
+    - nrd
+    - nrddb
+    - collectd
+    - mariadb
+    - mysqld-exporter
+
+- name: docker image push to local registry
+  command: docker image push tfMaster0:5000/{{ item }}
+  with_items:
+    - nrd
+    - nrddb
+    - collectd
+    - mariadb
+    - mysqld-exporter
+
+- name: copy cli yaml file to /tmp
+  copy:
+    src: "{{ item }}.j2"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - cli
+
+- name: copy cli yaml file to /usr/local/bin/cli
+  copy:
+    src: "{{ item }},j2"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - cli
+
+- name: Create a random nrf directory 
+  file:
+    path: /tmp/nrd_{{ random_number }}
+    state: directory
+    mode: 0777
+  register: result
+
+- name: debug directory output
+  debug:
+    var: result.path
+    verbosity: 5
+
+- name: Touch a file
+  file:
+    path: "{{ result.path }}/nrf.json"
+    state: touch
+    mode: 0777
+
+- name: create dummy docker container
+  command: docker create -ti --name dummy nrd:{{ nrd_version}} bash
+
+- name: copy nrf.json in tempfile
+  command: docker cp dummy:/etc/sysconfig/nrf.json "{{ result.path }}/nrf.json"
+
+- name: remove dummy docker container
+  command: docker rm -fv dummy
+
+- name: Touch a file /etc/sysconfig/nrfKubernetes.json
+  file:
+    path: /etc/sysconfig/nrfKubernetes.json
+    state: touch
+    mode: 0777
+
+- name: Touch a file /etc/sysconfig/nrfKubernetes_version.json
+  file:
+    path: /etc/sysconfig/nrfKubernetes_version.json
+    state: touch
+    mode: 0777
+
+- name: create nrd namespace in k8s
+  command: kubectl create namespace nrd
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create nrd-management namespace in k8s
+  command: kubectl create namespace nrd-management
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create nrd-database namespace in k8s
+  command: kubectl create namespace nrd-database
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: update nrd namespace with istio in k8s
+  command: kubectl label namespace nrd istio-injection=enabled
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create configmap
+  command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create configmap
+  command: kubectl create configmap nrdplatformcfg --from-file=/etc/sysconfig/nrfKubernetes.json -n default
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create configmap
+  command: kubectl create configmap imageversion --from-file=/etc/sysconfig/nrfKubernetes_version.json -n default
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create configmap
+  command: kubectl create configmap kpikci --from-literal=ci=15 --from-literal=ri=15 --from-literal=retention=7
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}

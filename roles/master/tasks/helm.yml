@@ -1,0 +1,8 @@
+---
+- name: copy helm charts to /tmp
+  copy:
+    src: "{{ local_dir }}/{{ nrd_dir }}/{{ helm_dir }}"
+    dest: "/tmp/"
+    mode: 0644
+
+# - name: todo helm chart upload

@@ -1,0 +1,40 @@
+---
+- name: copy pv/pvc yaml file to /tmp
+  copy:
+    src: "{{ local_dir }}/{{ nrd_dir }}/{{ db_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - nrddb-pv.yaml
+    - nrddb-pvc.yaml
+
+# ERROR WITH K8S commands to be sorted
+# - name: Create a nrd-database namespace
+#   k8s:
+#     name: nrd-database
+#     api_version: v1
+#     kind: Namespace
+#     state: present
+
+# - name: Create k8s pv/pvc definition from a file
+#   k8s:
+#     state: present
+#     src: /tmp/{{ item }}
+#   with_items:
+#     - nrddb-pv.yaml
+#     - nrddb-pvc.yaml
+
+- name: create kubernetes namespace in k8s
+  command: kubectl create namespace nrd-database
+  ignore_errors: True
+  become: yes
+  become_user: {{ user_name }}
+
+- name: create pv/pvc objects in k8s
+  command: kubectl create -f /tmp/{{ item }}
+  ignore_errors: True
+  with_items:
+    - nrddb-pv.yaml
+    - nrddb-pvc.yaml
+  become: yes
+  become_user: {{ user_name }}

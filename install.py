@@ -113,24 +113,28 @@ class installUpdates():
       for docker_file in files:
         docker_file_full = location + "/" + docker_file
         try:
-            subprocess.check_output(["scp","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", docker_file_full, username+"@"+host+":/tmp/"])
+            subprocess.check_output(["scp","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", docker_file_full, username+"@"+host+":/tmp/"])
         except Exception as error:
             return str(error) 
-        out, err = self.sendSshCommand(["sudo", "-u", "root", "docker", "load", "--input", "/tmp/" + docker_file], username, host)
+##        out, err = self.sendSshCommand(["sudo", "-u", "root", "docker", "load", "--input", "/tmp/" + docker_file], username, host)
         if err is not None:
             out = re.search('Loaded image: (.*)', out)
         if out:
             registry_name = host + ":5000/" + out.group(1)
+            print(registry_name)
+            print(out)
+            print(out.group(0))
+            print(out.group(1))
             if "nrd:NRD" in out.group(1):
                 self.update_user_local_cli(host, username, out.group(1))
-                if "master" in hostname:
+##                if "master" in hostname:
                     self.get_json_file(out.group(1), username, host)
             try:
-                subprocess.check_output(["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host,"sudo","-u","root", "docker","image","tag",out.group(1), registry_name])
+##                subprocess.check_output(["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host,"sudo","-u","root", "docker","image","tag",out.group(1), registry_name])
             except Exception as error:
                 return str(error) 
             try:
-                subprocess.check_output(["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host,"sudo","-u","root","docker","image","push", registry_name])
+##                subprocess.check_output(["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host,"sudo","-u","root","docker","image","push", registry_name])
             except Exception as error:
                 return str(error)
         subprocess.check_output(["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host, "rm", "-f", "/tmp/"+docker_file])
@@ -235,7 +239,7 @@ class installUpdates():
         helm_dir_full = location + "/" + helm_dir
         self.sendSshCommand(["rm", "-rf", "/tmp/" + helm_dir], username, host)
         try:
-            subprocess.check_output(["scp","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no",  "-r", helm_dir_full, "-i", "~/.ssh/paco_rsa", username+"@"+host+":/tmp/"])
+###            subprocess.check_output(["scp","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa",  "-r", helm_dir_full,  username+"@"+host+":/tmp/"])
             self.sendSshCommand(["rm", "-f", "/tmp/" + helm_dir + "/templates/Namespace_Label.yaml" ], username, host)
         except Exception as error:
             return str(error)    
@@ -276,14 +280,15 @@ class installUpdates():
         ssh_cmd = ["ssh","-o", "UserKnownHostsFile=/dev/null", "-o", "LogLevel=ERROR", "-o", "StrictHostKeyChecking=no", "-i", "~/.ssh/paco_rsa", username+"@"+host]
         for script_file in files:
             script_file_full = location + "/" + script_file
+            print(script_file_full)
             if script_file == "admin_tech_support.py":
                 try:
                     subprocess.check_output(scp_cmd + [script_file_full, username+"@"+host+":/tmp/"])
                 except Exception as error:
                     return str(error) 
                 try:
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp/"+script_file, "/usr/bin/"])
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/bin/"+script_file])
+##                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp"+script_file, "/usr/bin/"])
+##                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/bin/"+script_file])
                 except Exception as error:
                     return str(error)
 
@@ -293,8 +298,8 @@ class installUpdates():
                 except Exception as error:
                     return str(error) 
                 try:
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp/"+script_file, "/usr/bin/hostRpc"])
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/bin/hostRpc"])
+#                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp/"+script_file, "/usr/bin/hostRpc"])
+#                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/bin/hostRpc"])
                 except Exception as error:
                     return str(error)
 
@@ -306,16 +311,16 @@ class installUpdates():
                 try:
 
                     with open(os.devnull, 'w') as devnull:
-                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "cp", "/tmp/"+script_file, "/usr/lib/systemd/system/"], stdout=devnull, stderr=devnull)
+##                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "cp", "/tmp/"+script_file, "/usr/lib/systemd/system/"], stdout=devnull, stderr=devnull)
                         nrd_cli_service.communicate()
 
-                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "enable", "nrdcli.service"], stdout=devnull, stderr=devnull)
+##                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "enable", "nrdcli.service"], stdout=devnull, stderr=devnull)
                         nrd_cli_service.communicate()
 
-                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "daemon-reload"], stdout=devnull, stderr=devnull)
+##                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "daemon-reload"], stdout=devnull, stderr=devnull)
                         nrd_cli_service.communicate()
 
-                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "restart", "nrdcli"], stdout=devnull, stderr=devnull)
+##                        nrd_cli_service = Popen(ssh_cmd + ["sudo", "-u", "root", "systemctl", "restart", "nrdcli"], stdout=devnull, stderr=devnull)
                         nrd_cli_service.communicate()
 
                 except Exception as error:
@@ -327,8 +332,8 @@ class installUpdates():
                 except Exception as error:
                     return str(error)
                 try:
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp/"+script_file, "/usr/local/bin/"])
-                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/local/bin/"+script_file])
+##                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "cp","/tmp/"+script_file, "/usr/local/bin/"])
+##                    subprocess.check_output(ssh_cmd + ["sudo","-u","root", "chmod","+x","/usr/local/bin/"+script_file])
                 except Exception as error:
                     return str(error)
         
@@ -357,7 +362,7 @@ class pullImages():
         out, err = proc.communicate()
         if out:
             for line in out.splitlines():
-                if "master" in line:
+##                if "master" in line:
                     fields = line.split()
                     image_name= fields[0] + ":" + fields[1]
                     try:
@@ -443,7 +448,8 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
     hostname_list = get_hostnames()
-    username = str(getpass.getuser())
+    username = 'henderiw'
+    #username = str(getpass.getuser())
     job_list = list()
     worker_job_list = list()
 

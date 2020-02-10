@@ -1,0 +1,24 @@
+---
+- name: copy rbac yaml file to /tmp
+  copy:
+    src: "{{local_dir}}/{{ nrd_dir }}/{{ rbac_dir }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0755
+  with_items:
+    - clusteredit.yaml
+    - clusterview.yaml
+    - nrdedit.yaml
+    - nrdview.yaml
+    - superadmin.yaml
+
+- name: create rbac objects in k8s
+  command: kubectl create -f /tmp/{{ item }}
+  ignore_errors: True
+  with_items:
+    - clusteredit.yaml
+    - clusterview.yaml
+    - nrdedit.yaml
+    - nrdview.yaml
+    - superadmin.yaml
+  become: yes
+  become_user: {{user_name}}

@@ -1,0 +1,38 @@
+---
+- name: Ensure group "nrd" exists
+  group:
+    name: nrd
+    state: present
+
+- name: Add the user 'nrd'
+  user:
+    name: nrd
+    group: nrd
+
+- name: Create glusterfs /mnt directories
+  file:
+      path: "{{ item }}"
+      owner: "nrd"
+      group: "nrd"
+      state: directory
+      mode: 0755
+  with_items:
+    - /mnt/glusterfs/snmp
+    - /mnt/glusterfs/kpikci
+    - /mnt/glusterfs/cli
+    - /mnt/glusterfs/cli/system
+    - /mnt/glusterfs/cli/user
+    - /mnt/glusterfs/system
+    - /mnt/glusterfs/system/user
+
+- name: Create a symbolic link
+  file:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: "nrd"
+      group: "nrd"
+      state: link
+  with_items:
+    - { src: "/mnt/glusterfs/snmp", dest: "/var/lib/snmp" }
+    - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/kpikci" }
+    - { src: "/mnt/glusterfs/cli", dest: "/var/lib/cli" }

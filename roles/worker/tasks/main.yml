@@ -1,9 +1,8 @@
 ---
-- name: Create glusterfs mnt directory
-  file:
-      path: /mnt/glusterfs/db
-      state: directory
-      mode: 0777
-  become: yes
-  become_user: root
-  become_method: sudo
+- name: init tasks on master node
+  include_tasks: init.yml
+  run_once: yes
+
+- name: docker tasks on master node
+  include_tasks: docker.yml
+  run_once: yes

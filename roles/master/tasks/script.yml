@@ -1,0 +1,48 @@
+---
+
+- name: copy script admin_tech_support.py file
+  copy:
+    src: "{{local_dir}}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - admin_tech_support.py
+
+- name: copy script rpc.py file to /usr/bin/hostRpc
+  copy:
+    src: "{{local_dir}}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+    dest: "/usr/bin/hostRpc"
+    mode: 0755
+  with_items:
+    - "rpc.py"
+
+- name: copy nrdcli.service to /tmp
+  copy:
+    src: "{{local_dir}}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+    dest: "/usr/lib/systemd/system/{{ item }}"
+    mode: 0644
+  with_items:
+    - nrdcli.service
+
+- name: enable service nrdcli
+  systemd:
+    name: nrdcli
+    enabled: yes
+
+- name: daemon reload
+  systemd:
+    daemon_reload: yes
+
+- name: restart service nrdcli
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nrdcli
+
+- name: copy script find_service_worker file to /usr/local/bin
+  copy:
+    src: "{{local_dir}}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - find_service_worker
