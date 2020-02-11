@@ -1,8 +1,8 @@
 ---
-- name: init tasks on master node
+- name: init tasks on worker node
   include_tasks: init.yml
-  run_once: yes
+  #run_once: yes
 
-- name: docker tasks on master node
+- name: docker tasks on worker node
   include_tasks: docker.yml
-  run_once: yes
+  #run_once: yes
