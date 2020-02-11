@@ -1,9 +1,9 @@
 ---
 - name: pull docker images from master registry
-  command: docker image pull tfMaster0:5000/{{ item }}
+  command: docker image pull {{ registry_ip}}:5000/{{ item.name }}:{{ item.version}}
   with_items:
-    - nrd:NRD_11_0_R5
-    - nrddb:NRDDB_11_0_R5 
-    - collectd:5.8.1-1--NRD_11_0_R5
-    - bitnami/mariadb:10.3.15-debian-9-r31
-    - prom/mysqld-exporter:v0.10.0 
+    - { name: "nrd", version: "NRD_11_0_R5" }
+    - { name: "nrddb", version: "NRDDB_11_0_R5" }
+    - { name: "collectd", version: "5.8.1-1--NRD_11_0_R5" }
+    - { name: "bitnami/mariadb", version: "10.3.15-debian-9-r31" }
+    - { name: "prom/mysqld-exporter", version: "v0.10.0" }

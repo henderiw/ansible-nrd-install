@@ -3,6 +3,9 @@ master_ip: 10.10.20.20
 user_name: henderiw
 local_dir: /home/henderiw
 
+#Docker
+registry_ip: 10.10.20.10
+
 nrd_version: NRD_11_0_R5
 nrd_dir: nrd_11_0_R5
 
