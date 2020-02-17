@@ -118,48 +118,72 @@
 
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create nrd-management namespace in k8s
   command: kubectl create namespace nrd-management
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create nrd-database namespace in k8s
   command: kubectl create namespace nrd-database
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: update nrd namespace with istio in k8s
   command: kubectl label namespace nrd istio-injection=enabled
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrdplatformcfg --from-file=/etc/sysconfig/nrfKubernetes.json -n default
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create configmap
   command: kubectl create configmap imageversion --from-file=/etc/sysconfig/nrfKubernetes_version.json -n default
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
 
 - name: create configmap
   command: kubectl create configmap kpikci --from-literal=ci=15 --from-literal=ri=15 --from-literal=retention=7
-  ignore_errors: True
+  #ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: result
+  changed_when: "'created' in result.stdout"
+  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
