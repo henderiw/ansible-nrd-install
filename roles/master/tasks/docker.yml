@@ -66,16 +66,16 @@
     src: "{{ item }}.j2"
     dest: "/tmp/{{ item }}"
     mode: 0755
-    remote_src: yes
   with_items:
     - cli
-  delegate_to: "{{ inventory_hostname }}"
+  #delegate_to: "{{ inventory_hostname }}"
 
 - name: copy cli yaml file to /usr/local/bin/cli
   copy:
     src: "{{ item }},j2"
     dest: "/usr/local/bin/{{ item }}"
     mode: 0755
+    remote_src: yes
   with_items:
     - cli
 
