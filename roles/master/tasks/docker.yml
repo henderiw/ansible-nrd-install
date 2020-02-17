@@ -70,7 +70,6 @@
   with_items:
     - cli
   delegate_to: "{{ inventory_hostname }}"
-  remote_user: root
 
 - name: copy cli yaml file to /usr/local/bin/cli
   copy:
