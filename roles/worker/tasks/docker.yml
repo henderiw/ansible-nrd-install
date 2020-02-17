@@ -1,5 +1,5 @@
 ---
-- name: pull docker images from master registry
+- name: pull docker images from registry
   command: docker image pull {{ registry_ip}}:5000/{{ item.name }}:{{item.version}}
   with_items:
     - { name: "nrd", version: "NRD_11_0_R5" }

@@ -1,56 +1,65 @@
 ---
-- name: copy docker files to /tmp
-  copy:
-    src: "{{ local_dir }}{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
-    dest: "/tmp/{{ item }}"
-    mode: 0644
+- name: pull docker images from registry
+  command: docker image pull {{ registry_ip}}:5000/{{ item.name }}:{{item.version}}
   with_items:
-    - nrd.tar.gz
-    - nrddb.tar.gz
-    - collectd.tar.gz
-    - mariadb.tar.gz
-    - mysqld-exporter.tar.gz
+    - { name: "nrd", version: "NRD_11_0_R5" }
+    - { name: "nrddb", version: "NRDDB_11_0_R5" }
+    - { name: "collectd", version: "5.8.1-1--NRD_11_0_R5" }
+    - { name: "bitnami/mariadb", version: "10.3.15-debian-9-r31" }
+    - { name: "prom/mysqld-exporter", version: "v0.10.0" }
 
-# ERROR to be sorted
-# - name: Load image from archive and push to a private registry
-#   docker_image:
-#     name: "localhost:5000/{{ item.name }}"
-#     push: yes
-#     load_path: "/tmp/{{ item.filename }}"
-#     source: load
+# - name: copy docker files to /tmp
+#   copy:
+#     src: "{{ local_dir }}{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
+#     dest: "/tmp/{{ item }}"
+#     mode: 0644
 #   with_items:
-#     - { name: "nrd", filename: "nrd.tar.gz" }
-#     - { name: "nrddb", filename: "nrddb.tar.gz" }
-#     - { name: "collectd", filename: "collectd.tar.gz" }
-#     - { name: "mariadb", filename: "mariadb.tar.gz" }
-#     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
+#     - nrd.tar.gz
+#     - nrddb.tar.gz
+#     - collectd.tar.gz
+#     - mariadb.tar.gz
+#     - mysqld-exporter.tar.gz
 
-- name: load docker images
-  command: docker load -i /tmp/{{ item }}
-  with_items:
-    - nrd.tar.gz
-    - nrddb.tar.gz
-    - collectd.tar.gz
-    - mariadb.tar.gz
-    - mysqld-exporter.tar.gz
+# # ERROR to be sorted
+# # - name: Load image from archive and push to a private registry
+# #   docker_image:
+# #     name: "localhost:5000/{{ item.name }}"
+# #     push: yes
+# #     load_path: "/tmp/{{ item.filename }}"
+# #     source: load
+# #   with_items:
+# #     - { name: "nrd", filename: "nrd.tar.gz" }
+# #     - { name: "nrddb", filename: "nrddb.tar.gz" }
+# #     - { name: "collectd", filename: "collectd.tar.gz" }
+# #     - { name: "mariadb", filename: "mariadb.tar.gz" }
+# #     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
 
-- name: tag docker images
-  command: docker image tag {{ item }} tfMaster0:5000/{{ item }}
-  with_items:
-    - nrd
-    - nrddb
-    - collectd
-    - mariadb
-    - mysqld-exporter
+# - name: load docker images
+#   command: docker load -i /tmp/{{ item }}
+#   with_items:
+#     - nrd.tar.gz
+#     - nrddb.tar.gz
+#     - collectd.tar.gz
+#     - mariadb.tar.gz
+#     - mysqld-exporter.tar.gz
 
-- name: docker image push to local registry
-  command: docker image push tfMaster0:5000/{{ item }}
-  with_items:
-    - nrd
-    - nrddb
-    - collectd
-    - mariadb
-    - mysqld-exporter
+# - name: tag docker images
+#   command: docker image tag {{ item }} tfMaster0:5000/{{ item }}
+#   with_items:
+#     - nrd
+#     - nrddb
+#     - collectd
+#     - mariadb
+#     - mysqld-exporter
+
+# - name: docker image push to local registry
+#   command: docker image push tfMaster0:5000/{{ item }}
+#   with_items:
+#     - nrd
+#     - nrddb
+#     - collectd
+#     - mariadb
+#     - mysqld-exporter
 
 - name: copy cli yaml file to /tmp
   copy:
