@@ -72,7 +72,7 @@
 
 - name: copy cli yaml file to /usr/local/bin/cli
   copy:
-    src: "{{ item }},j2"
+    src: /tmp/"{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
     mode: 0755
     remote_src: yes
