@@ -62,7 +62,7 @@
 #     - mysqld-exporter
 
 - name: copy cli yaml file to /tmp
-  copy:
+  template:
     src: "{{ item }}.j2"
     dest: "/tmp/{{ item }}"
     mode: 0755
