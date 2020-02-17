@@ -4,6 +4,7 @@
     src: "{{ local_dir }}/{{ nrd_dir }}/{{ db_dir }}/{{ item }}"
     dest: "/tmp/{{ item }}"
     mode: 0755
+    remote_src: yes
   with_items:
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
