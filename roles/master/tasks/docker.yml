@@ -96,7 +96,7 @@
     mode: 0777
 
 - name: create dummy docker container
-  command: docker create -ti --name dummy nrd:{{ nrd_version}} bash
+  command: docker create -ti --name dummy {{ registry_ip}}:5000/nrd:{{ nrd_version}} bash
 
 - name: copy nrf.json in tempfile
   command: docker cp dummy:/etc/sysconfig/nrf.json "{{ result.path }}/nrf.json"
