@@ -66,6 +66,7 @@
     src: "{{ item }}.j2"
     dest: "/tmp/{{ item }}"
     mode: 0755
+    remote_src: yes
   with_items:
     - cli
 
