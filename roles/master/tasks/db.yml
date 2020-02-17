@@ -28,7 +28,7 @@
   command: kubectl create namespace nrd-database
   ignore_errors: True
   become: yes
-  become_user: {{ user_name }}
+  become_user: "{{ user_name }}"
 
 - name: create pv/pvc objects in k8s
   command: kubectl create -f /tmp/{{ item }}
@@ -37,4 +37,4 @@
     - nrddb-pv.yaml
     - nrddb-pvc.yaml
   become: yes
-  become_user: {{ user_name }}
+  become_user: "{{ user_name }}"
