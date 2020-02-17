@@ -7,9 +7,9 @@
   include_tasks: docker.yml
   run_once: yes
 
-- name: helm tasks on master node
-  include_tasks: helm.yml
-  run_once: yes
+# - name: helm tasks on master node
+#   include_tasks: helm.yml
+#   run_once: yes
 
 - name: script tasks on master node
   include_tasks: script.yml
