@@ -30,6 +30,9 @@
   ignore_errors: True
   become: yes
   become_user: "{{ user_name }}"
+  register: res
+  changed_when: "'created' in res.stdout"
+  failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create pv/pvc objects in k8s
   command: kubectl create -f /tmp/{{ item }}
@@ -39,3 +42,6 @@
     - nrddb-pvc.yaml
   become: yes
   become_user: "{{ user_name }}"
+  register: res
+  changed_when: "'created' in res.stdout"
+  failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
