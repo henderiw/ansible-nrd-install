@@ -150,7 +150,7 @@
   become_user: "{{ user_name }}"
   register: result
   changed_when: "'created' in result.stdout"
-  failed_when: "result.rc != 0 and 'already exists' not in result.stderr"
+  failed_when: "result.rc != 0 and 'already' not in result.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
