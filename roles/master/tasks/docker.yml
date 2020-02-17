@@ -72,12 +72,10 @@
 
 - name: copy cli yaml file to /usr/local/bin/cli
   copy:
-    src: /tmp/"{{ item }}"
-    dest: "/usr/local/bin/{{ item }}"
+    src: /tmp/cli
+    dest: /usr/local/bin/cli
     mode: 0755
-    #remote_src: yes
-  with_items:
-    - cli
+    remote_src: yes
 
 - name: Create a random nrf directory 
   file:
