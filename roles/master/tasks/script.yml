@@ -1,6 +1,7 @@
 ---
 
 - name: copy script admin_tech_support.py file
+  become: true
   copy:
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"
@@ -10,6 +11,7 @@
     - admin_tech_support.py
 
 - name: copy script rpc.py file to /usr/bin/hostRpc
+  become: true
   copy:
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/bin/hostRpc"
@@ -19,6 +21,7 @@
     - "rpc.py"
 
 - name: copy nrdcli.service to /tmp
+  become: true
   copy:
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/lib/systemd/system/{{ item }}"
@@ -28,21 +31,25 @@
     - nrdcli.service
 
 - name: enable service nrdcli
+  become: true
   systemd:
     name: nrdcli
     enabled: yes
 
 - name: daemon reload
+  become: true
   systemd:
     daemon_reload: yes
 
 - name: restart service nrdcli
+  become: true
   systemd:
     state: restarted
     daemon_reload: yes
     name: nrdcli
 
 - name: copy script find_service_worker file to /usr/local/bin
+  become: true
   copy:
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
