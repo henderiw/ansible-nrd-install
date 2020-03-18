@@ -1,17 +1,20 @@
 ---
 - name: Ensure group "nrd" exists
+  become: true
   group:
     name: nrd
     gid: "10011"
     state: present
 
 - name: Add the user 'nrd'
+  become: true
   user:
     name: nrd
     uid: "10011"
     group: nrd
 
 - name: Create glusterfs /mnt directories
+  become: true
   file:
       path: "{{ item }}"
       owner: "nrd"
