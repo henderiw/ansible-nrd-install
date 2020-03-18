@@ -1,16 +1,10 @@
 ---    
 - hosts: master
   gather_facts: yes
-  become: yes
-  become_user: root
-  become_method: sudo
   roles:
     - { role: master, tags: master }
 
 - hosts: node
   gather_facts: yes
-  become: yes
-  become_user: root
-  become_method: sudo
   roles:
     - { role: worker, tags: worker }
