@@ -30,16 +30,15 @@
     path: /tmp/nrd_{{ random_number }}
     state: directory
     mode: 0777
-  register: result
+  register: random_dir
 
 - name: debug directory output
   debug:
-    var: result.path
-    verbosity: 5
+    msg: random_dir.path
 
 - name: Touch a file
   file:
-    path: "{{ result.path }}/nrf.json"
+    path: "{{ random_dir.path }}/nrf.json"
     state: touch
     mode: 0777
 
@@ -47,7 +46,7 @@
   command: docker create -ti --name dummy {{ bootstrap_server_ip}}:5000/nrd:{{ nrd_version}} bash
 
 - name: copy nrf.json in tempfile
-  command: docker cp dummy:/etc/sysconfig/nrf.json "{{ result.path }}/nrf.json"
+  command: docker cp dummy:/etc/sysconfig/nrf.json "{{ random_dir.path }}/nrf.json"
 
 - name: remove dummy docker container
   command: docker rm -fv dummy
@@ -58,7 +57,6 @@
     path: /etc/sysconfig
     state: directory
     mode: 0755
-  register: result
 
 - name: Touch a file /etc/sysconfig/nrfKubernetes.json
   become: true
@@ -99,7 +97,7 @@
   failed_when: "res.rc != 0 and 'already' not in res.stderr"
 
 - name: create configmap
-  command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
+  command: kubectl create configmap nrf --from-file="{{ random_dir.path }}/nrf.json" -n nrd
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
