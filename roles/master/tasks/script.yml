@@ -5,7 +5,7 @@
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"
     mode: "0755"
-    remote_src: yes
+    #remote_src: yes
   with_items:
     - admin_tech_support.py
 
@@ -14,7 +14,7 @@
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/bin/hostRpc"
     mode: "0755"
-    remote_src: yes
+    #remote_src: yes
   with_items:
     - "rpc.py"
 
@@ -23,7 +23,7 @@
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/lib/systemd/system/{{ item }}"
     mode: "0644"
-    remote_src: yes
+    #remote_src: yes
   with_items:
     - nrdcli.service
 
@@ -47,6 +47,6 @@
     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
     mode: "0755"
-    remote_src: yes
+    #remote_src: yes
   with_items:
     - find_service_worker
