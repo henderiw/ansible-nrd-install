@@ -20,13 +20,21 @@
   with_items:
     - "rpc.py"
 
-- name: copy nrdcli.service to /tmp
-  become: true
-  copy:
-    src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+# - name: copy nrdcli.service to /tmp
+#   become: true
+#   copy:
+#     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ script_dir }}/{{ item }}"
+#     dest: "/usr/lib/systemd/system/{{ item }}"
+#     mode: "0644"
+#     #remote_src: yes
+#   with_items:
+#     - nrdcli.service
+
+- name: copy nrdcli.service to /usr/lib/systemd/system/
+  template:
+    src: "{{ item }}.j2"
     dest: "/usr/lib/systemd/system/{{ item }}"
     mode: "0644"
-    #remote_src: yes
   with_items:
     - nrdcli.service
 
