@@ -31,6 +31,7 @@
 #     - nrdcli.service
 
 - name: copy nrdcli.service to /lib/systemd/system/
+  become: true
   template:
     src: "{{ item }}.j2"
     dest: "/lib/systemd/system/{{ item }}"
