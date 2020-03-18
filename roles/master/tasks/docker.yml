@@ -18,6 +18,7 @@
   #delegate_to: "{{ inventory_hostname }}"
 
 - name: copy cli yaml file to /usr/local/bin/cli
+  become: true
   copy:
     src: /tmp/cli
     dest: /usr/local/bin/cli
@@ -52,6 +53,7 @@
   command: docker rm -fv dummy
 
 - name: Create a random nrf directory 
+  become: true
   file:
     path: /etc/sysconfig
     state: directory
@@ -59,12 +61,14 @@
   register: result
 
 - name: Touch a file /etc/sysconfig/nrfKubernetes.json
+  become: true
   file:
     path: /etc/sysconfig/nrfKubernetes.json
     state: touch
     mode: 0777
 
 - name: Touch a file /etc/sysconfig/nrfKubernetes_version.json
+  become: true
   file:
     path: /etc/sysconfig/nrfKubernetes_version.json
     state: touch
@@ -72,64 +76,48 @@
 
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create nrd-management namespace in k8s
   command: kubectl create namespace nrd-management
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create nrd-database namespace in k8s
   command: kubectl create namespace nrd-database
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: update nrd namespace with istio in k8s
   command: kubectl label namespace nrd istio-injection=enabled
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrdplatformcfg --from-file=/etc/sysconfig/nrfKubernetes.json -n default
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap imageversion --from-file=/etc/sysconfig/nrfKubernetes_version.json -n default
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap kpikci --from-literal=ci=15 --from-literal=ri=15 --from-literal=retention=7
-  become: yes
-  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
