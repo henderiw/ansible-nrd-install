@@ -30,10 +30,10 @@
 #   with_items:
 #     - nrdcli.service
 
-- name: copy nrdcli.service to /usr/lib/systemd/system/
+- name: copy nrdcli.service to /lib/systemd/system/
   template:
     src: "{{ item }}.j2"
-    dest: "/usr/lib/systemd/system/{{ item }}"
+    dest: "/lib/systemd/system/{{ item }}"
     mode: "0644"
   with_items:
     - nrdcli.service
