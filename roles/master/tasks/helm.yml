@@ -1,7 +1,7 @@
 ---
 - name: copy helm charts to /tmp
 #   copy:
-#     src: "{{ local_dir }}/{{ nrd_dir }}/{{ helm_dir }}"
+#     src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ helm_dir }}"
 #     dest: "/tmp/"
 #     mode: 0644
 

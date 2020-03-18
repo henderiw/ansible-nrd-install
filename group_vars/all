@@ -1,10 +1,9 @@
 master_ip: 10.1.0.10
 
-user_name: henderiw
-local_dir: /home/henderiw
+cloud_user: henderiw
 
 #Docker
-registry_ip: 10.0.1.10
+bootstrap_server_ip: 10.0.1.10
 
 nrd_version: NRD_11_0_R5
 nrd_dir: nrd_11_0_R5

@@ -1,6 +1,6 @@
 ---
 - name: pull docker images from registry
-  command: docker image pull {{ registry_ip}}:5000/{{ item.name }}:{{item.version}}
+  command: docker image pull {{ bootstrap_server_ip}}:5000/{{ item.name }}:{{item.version}}
   with_items:
     - { name: "nrd", version: "NRD_11_0_R5" }
     - { name: "nrddb", version: "NRDDB_11_0_R5" }
@@ -8,64 +8,11 @@
     - { name: "bitnami/mariadb", version: "10.3.15-debian-9-r31" }
     - { name: "prom/mysqld-exporter", version: "v0.10.0" }
 
-# - name: copy docker files to /tmp
-#   copy:
-#     src: "{{ local_dir }}{{ nrd_dir }}/{{ docker_dir }}/{{ item }}"
-#     dest: "/tmp/{{ item }}"
-#     mode: 0644
-#   with_items:
-#     - nrd.tar.gz
-#     - nrddb.tar.gz
-#     - collectd.tar.gz
-#     - mariadb.tar.gz
-#     - mysqld-exporter.tar.gz
-
-# # ERROR to be sorted
-# # - name: Load image from archive and push to a private registry
-# #   docker_image:
-# #     name: "localhost:5000/{{ item.name }}"
-# #     push: yes
-# #     load_path: "/tmp/{{ item.filename }}"
-# #     source: load
-# #   with_items:
-# #     - { name: "nrd", filename: "nrd.tar.gz" }
-# #     - { name: "nrddb", filename: "nrddb.tar.gz" }
-# #     - { name: "collectd", filename: "collectd.tar.gz" }
-# #     - { name: "mariadb", filename: "mariadb.tar.gz" }
-# #     - { name: "mysqld-exporter", filename: "mysqld-exporter.tar.gz" }
-
-# - name: load docker images
-#   command: docker load -i /tmp/{{ item }}
-#   with_items:
-#     - nrd.tar.gz
-#     - nrddb.tar.gz
-#     - collectd.tar.gz
-#     - mariadb.tar.gz
-#     - mysqld-exporter.tar.gz
-
-# - name: tag docker images
-#   command: docker image tag {{ item }} tfMaster0:5000/{{ item }}
-#   with_items:
-#     - nrd
-#     - nrddb
-#     - collectd
-#     - mariadb
-#     - mysqld-exporter
-
-# - name: docker image push to local registry
-#   command: docker image push tfMaster0:5000/{{ item }}
-#   with_items:
-#     - nrd
-#     - nrddb
-#     - collectd
-#     - mariadb
-#     - mysqld-exporter
-
 - name: copy cli yaml file to /tmp
   template:
     src: "{{ item }}.j2"
     dest: "/tmp/{{ item }}"
-    mode: 0755
+    mode: "0755"
   with_items:
     - cli
   #delegate_to: "{{ inventory_hostname }}"
@@ -74,7 +21,7 @@
   copy:
     src: /tmp/cli
     dest: /usr/local/bin/cli
-    mode: 0755
+    mode: "0755"
     remote_src: yes
 
 - name: Create a random nrf directory 
@@ -96,7 +43,7 @@
     mode: 0777
 
 - name: create dummy docker container
-  command: docker create -ti --name dummy {{ registry_ip}}:5000/nrd:{{ nrd_version}} bash
+  command: docker create -ti --name dummy {{ bootstrap_server_ip}}:5000/nrd:{{ nrd_version}} bash
 
 - name: copy nrf.json in tempfile
   command: docker cp dummy:/etc/sysconfig/nrf.json "{{ result.path }}/nrf.json"
@@ -118,72 +65,64 @@
 
 - name: create nrd namespace in k8s
   command: kubectl create namespace nrd
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create nrd-management namespace in k8s
   command: kubectl create namespace nrd-management
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create nrd-database namespace in k8s
   command: kubectl create namespace nrd-database
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: update nrd namespace with istio in k8s
   command: kubectl label namespace nrd istio-injection=enabled
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrf --from-file="{{ result.path }}/nrf.json" -n nrd
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap nrdplatformcfg --from-file=/etc/sysconfig/nrfKubernetes.json -n default
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap imageversion --from-file=/etc/sysconfig/nrfKubernetes_version.json -n default
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"
 
 - name: create configmap
   command: kubectl create configmap kpikci --from-literal=ci=15 --from-literal=ri=15 --from-literal=retention=7
-  #ignore_errors: True
   become: yes
-  become_user: "{{ user_name }}"
+  become_user: "{{ cloud_user }}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"

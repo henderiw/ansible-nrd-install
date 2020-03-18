@@ -32,7 +32,7 @@ sudo chown nrd /home/\`whoami\`/.kubecfg/.kube/config
 sudo chgrp nrd /home/\`whoami\`/.kubecfg/.kube/config
 sudo chmod 771 /home/\`whoami\`/.kubecfg/.kube/config
 fi
-sudo docker run  -v /mnt/glusterfs/system/user:/var/lib/system/user -v /etc/kubernetes/pki:/var/lib/pki -v /home/\`whoami\`/.kubecfg/.kube:/home/nrd/.kube/ -v /mnt/glusterfs/cli:/var/lib/cli -it \$tag sudo -u nrd cli 
+sudo docker run  -v /mnt/glusterfs/system/user:/var/lib/system/user -v /etc/kubernetes/pki:/var/lib/pki -v /home/\`whoami\`/.kubecfg/.kube:/home/nrd/.kube/ -v /mnt/glusterfs/cli:/var/lib/cli -it $tag sudo -u nrd cli 
 else
 docker run  -v /mnt/glusterfs/system/user:/var/lib/system/user -v /etc/kubernetes/pki:/var/lib/pki -v /home/\`whoami\`/.kube:/home/nrd/.kube/ -v /mnt/glusterfs/cli:/var/lib/cli -it \$tag sudo -u nrd cli 
 fi

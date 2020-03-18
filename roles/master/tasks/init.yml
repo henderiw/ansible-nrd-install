@@ -2,11 +2,13 @@
 - name: Ensure group "nrd" exists
   group:
     name: nrd
+    gid: "10011"
     state: present
 
 - name: Add the user 'nrd'
   user:
     name: nrd
+    uid: "10011"
     group: nrd
 
 - name: Create glusterfs /mnt directories
@@ -36,3 +38,4 @@
     - { src: "/mnt/glusterfs/snmp", dest: "/var/lib/snmp" }
     - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/kpikci" }
     - { src: "/mnt/glusterfs/cli", dest: "/var/lib/cli" }
+    - { src: "/mnt/glusterfs/kpikci", dest: "/var/lib/stats" }

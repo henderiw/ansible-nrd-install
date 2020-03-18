@@ -1,9 +1,9 @@
 ---
 - name: copy rbac yaml file to /tmp
   copy:
-    src: "{{local_dir}}/{{ nrd_dir }}/{{ rbac_dir }}/{{ item }}"
+    src: "/home/{{ cloud_user }}/{{ nrd_dir }}/{{ rbac_dir }}/{{ item }}"
     dest: "/tmp/{{ item }}"
-    mode: 0755
+    mode: "0755"
     remote_src: yes
   with_items:
     - clusteredit.yaml
@@ -22,7 +22,7 @@
     - nrdview.yaml
     - superadmin.yaml
   become: yes
-  become_user: "{{user_name}}"
+  become_user: "{{cloud_user}}"
   register: res
   changed_when: "'created' in res.stdout"
   failed_when: "res.rc != 0 and 'already exists' not in res.stderr"

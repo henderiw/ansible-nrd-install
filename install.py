@@ -254,7 +254,7 @@ class installUpdates():
 
     def load_scripts(self, host, username, location):
         try:
-            with open(location + "/nrdcli.service", "w+") as fid:
+            with open(location + "/nrd.service", "w+") as fid:
               # Create NRD-CLI-Service file
               service_file_content = [
                 "[Unit]",
